@@ -87,6 +87,7 @@ class Ui_mwMailingRemove(object):
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
         self.rbtnMailingNote = QtWidgets.QRadioButton(self.verticalLayoutWidget)
+        self.rbtnMailingNote.setChecked(True)
         self.rbtnMailingNote.setObjectName("rbtnMailingNote")
         self.verticalLayout.addWidget(self.rbtnMailingNote)
         self.rbtnPostNote = QtWidgets.QRadioButton(self.verticalLayoutWidget)

@@ -107,9 +107,6 @@ class MailingRemove(QMainWindow, Ui_mwMailingRemove):
         self.tblResults.hide()
         self.btnRemove.hide()
         
-        self.rbtnMailingNote.setChecked(False)
-        self.rbtnPostNote.setChecked(False)
-        
         self.gbNotes.hide()
     
     def remove_error(self, error):
@@ -169,7 +166,7 @@ class RemoveProgress(QWidget):
         self.resize(300, 300)
  
         self.movieLabel.setMovie(self.movie)
-        self.movie.setFileName('ui/image/gears.gif')
+        self.movie.setFileName('image/gears.gif')
         
         #Start aligning the .gif on the screen, always needs fudged, there is 
         #probably a better way to do this. 

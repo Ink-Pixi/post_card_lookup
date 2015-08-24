@@ -198,6 +198,9 @@
         <property name="text">
          <string>We received the postcard back from the post office as undeliverable.  I have marked the acct as do not mail.</string>
         </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item>
