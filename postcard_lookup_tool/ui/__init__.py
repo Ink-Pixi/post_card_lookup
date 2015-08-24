@@ -1,0 +1,1 @@
+from ui.mwMailingRemove import Ui_mwMailingRemove
