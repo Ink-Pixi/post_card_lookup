@@ -12,6 +12,9 @@ class Ui_mwMailingRemove(object):
     def setupUi(self, mwMailingRemove):
         mwMailingRemove.setObjectName("mwMailingRemove")
         mwMailingRemove.resize(846, 430)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/image/document_delete.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        mwMailingRemove.setWindowIcon(icon)
         mwMailingRemove.setStyleSheet("")
         self.centralwidget = QtWidgets.QWidget(mwMailingRemove)
         self.centralwidget.setObjectName("centralwidget")
@@ -100,7 +103,7 @@ class Ui_mwMailingRemove(object):
 
     def retranslateUi(self, mwMailingRemove):
         _translate = QtCore.QCoreApplication.translate
-        mwMailingRemove.setWindowTitle(_translate("mwMailingRemove", "MainWindow"))
+        mwMailingRemove.setWindowTitle(_translate("mwMailingRemove", "Remove From Mailing List"))
         self.lblFirstName.setText(_translate("mwMailingRemove", "First Name:"))
         self.lblLastName.setText(_translate("mwMailingRemove", "Last Name:"))
         self.lblZipCode.setText(_translate("mwMailingRemove", "Zip Code:"))
@@ -110,3 +113,4 @@ class Ui_mwMailingRemove(object):
         self.rbtnMailingNote.setText(_translate("mwMailingRemove", "We received the postcard back from the post office as undeliverable.  I have marked the acct as do not mail."))
         self.rbtnPostNote.setText(_translate("mwMailingRemove", "Per the customer’s request to be removed from the mailing list we have marked the account as Do Not Mail."))
 
+import image_rc

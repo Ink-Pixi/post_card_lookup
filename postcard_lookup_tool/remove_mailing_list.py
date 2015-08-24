@@ -106,11 +106,11 @@ class MailingRemove(QMainWindow, Ui_mwMailingRemove):
         
         self.tblResults.hide()
         self.btnRemove.hide()
-        self.gbNotes.hide()
         
         self.rbtnMailingNote.setChecked(False)
         self.rbtnPostNote.setChecked(False)
         
+        self.gbNotes.hide()
     
     def remove_error(self, error):
         QMessageBox.information(self, 'Error', 'The server was unable to complete this action, please try again. \n \n' + 'Details: ' + str(error) + \
