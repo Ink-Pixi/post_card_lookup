@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="image">
+    <file>pixi_logo_new.png</file>
     <file>document_delete.png</file>
   </qresource>
 </RCC>

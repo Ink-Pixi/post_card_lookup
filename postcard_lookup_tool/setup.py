@@ -23,8 +23,8 @@ shortcut_table = [
      None,                     # ShowCmd
      'TARGETDIR'               # WkDir
      ),
-    ("StartupShortcut",        # Shortcut
-     "StartupFolder",          # Directory_
+    ("ProgramShortcut",        # Shortcut
+     "StartMenuFolder",          # Directory_
      "Remove From Mailing List",           # Name
      "TARGETDIR",              # Component_
      "[TARGETDIR]Remove From Mailing List.exe",# Target
@@ -40,7 +40,7 @@ shortcut_table = [
 
 msi_data = {"Shortcut": shortcut_table}
 
-build_exe_options = {'packages':['ui', 'data'], 'include_files':['C:\Python34\Lib\site-packages\PyQt5\libEGL.dll', 'image_rc.py'], 
+build_exe_options = {'packages':['ui', 'data'], 'include_files':['C:\Python34\Lib\site-packages\PyQt5\libEGL.dll', 'image_rc.py', 'image/'], 
                      'includes':['decimal', 'atexit'], 'excludes':['Tkinter'], 'include_msvcr': True}
 
 bdist_msi_options = {

@@ -2,7 +2,8 @@ import sys
 import ctypes
 from data import remove_mailing_database
 from ui import Ui_mwMailingRemove
-from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem, QMessageBox, QLabel, QSizePolicy, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem, QMessageBox, QLabel, QSizePolicy, QVBoxLayout, QWidget,\
+    QListWidgetItem
 from PyQt5.QtGui import QMovie
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
 
@@ -18,11 +19,16 @@ class MailingRemove(QMainWindow, Ui_mwMailingRemove):
                 
         self.leLastName.returnPressed.connect(self.search_name)
         self.leZipCode.returnPressed.connect(self.search_name)
-               
+        
+        self.tblResults.cellPressed.connect(self.tbl_selection_changed)   
+            
         #hide widgets not needed until later, maybe disable them...
         self.tblResults.hide()
         self.btnRemove.hide()
         self.gbNotes.hide()
+        self.lstNotes.hide()
+    
+
     
     def search_name(self):
         try:
@@ -32,7 +38,7 @@ class MailingRemove(QMainWindow, Ui_mwMailingRemove):
             QMessageBox.critical(self, 'I got a bad feeling about this', 'Something has gone wrong: \n' + str(e), QMessageBox.Ok)
                 
     def show_results(self, results):
-        lstHeader = ['', '', 'Database', 'First Name', 'Middle Name', 'Last Name', 'Company', 'Address', 'City', 'State', 'Zip']
+        lstHeader = ['', '', 'Database', 'First Name', 'Middle Name', 'Last Name', 'Company', 'Address', 'Address 2', 'City', 'State', 'Zip']
         self.tblResults.setHorizontalHeaderLabels(lstHeader)
         if results:
             self.tblResults.setRowCount(len(results))
@@ -55,13 +61,17 @@ class MailingRemove(QMainWindow, Ui_mwMailingRemove):
             #self.tblResults.itemChanged.connect(self.item_checked)
             self.tblResults.hideColumn(1)
             
+            
             self.btnRemove.show()
             self.gbNotes.show()
+            self.lstNotes.show()
+            self.lstNotes.clear()
         else:
             QMessageBox.information(self, 'No Results Found', 'Unable to find any results', QMessageBox.Ok)
             self.tblResults.hide()
             self.btnRemove.hide()
             self.gbNotes.hide()
+            self.lstNotes.hide()
             
     def btnRemove_clicked(self):
         lstRemove = []
@@ -108,12 +118,31 @@ class MailingRemove(QMainWindow, Ui_mwMailingRemove):
         self.btnRemove.hide()
         
         self.gbNotes.hide()
+        self.lstNotes.hide()
     
     def remove_error(self, error):
         QMessageBox.information(self, 'Error', 'The server was unable to complete this action, please try again. \n \n' + 'Details: ' + str(error) + \
                                  '\n \n If you continue to receive this message please contact IT.', QMessageBox.Ok)
         
+    def tbl_selection_changed(self, row, col):
+        cust_id = self.tblResults.item(row, 1).text()
+        db = self.tblResults.item(row, 2).text()
+        
+        orders = self.rmd.get_cust_ords(cust_id, db)
+        ord_notes = self.rmd.get_ord_notes(orders, db)
+                
+        cust_notes = self.rmd.get_cust_notes(cust_id, db)
+        
+        lst_notes = cust_notes + ord_notes
+        
+        self.show_notes(lst_notes)
     
+    def show_notes(self, notes):
+        self.lstNotes.clear()
+            
+        for note in notes:
+            item = QListWidgetItem(note)
+            self.lstNotes.addItem(item)
         
 class RemoveFromList(QThread):
     remove_finished = pyqtSignal()

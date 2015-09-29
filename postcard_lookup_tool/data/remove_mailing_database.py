@@ -12,9 +12,9 @@ def search_name(first_name=None, last_name=None, zip_code=None):
     if zip_code:
         zip_code = zip_code.strip()[:5]
     
-    databases = ['InkPixi', 'InkPixiArchives2011', 'AlumniOriginals', 'AlumniOriginalsArchives2003', 'AlumniOriginalsArchives2004' ]
+    databases = ['InkPixi', 'InkPixiArchives2011', 'AlumniOriginals', 'AlumniOriginalsArchives2003', 'AlumniOriginalsArchives2004', 'ESMRetail' ]
     
-    sql_select = "SELECT customerID, db_name() as 'database',  firstName, middleName, lastName, company, address, city, state, zip FROM dbo.customers WHERE "
+    sql_select = "SELECT customerID, db_name() as 'database',  firstName, middleName, lastName, company, address, address2, city, state, zip FROM dbo.customers WHERE "
     
     if first_name and last_name:
         sql_where = "firstName = ? AND lastName = ?"
@@ -23,7 +23,7 @@ def search_name(first_name=None, last_name=None, zip_code=None):
         sql_where = "lastName = ? AND LEFT(zip, 5) = ?"
         sql_params = (last_name, zip_code)
     elif first_name and last_name and zip_code:
-        sql_where = "firstName = ?, lastName = ?, zip = ?"
+        sql_where = "firstName = ? AND lastName = ? AND LEFT(zip, 5) = ?"
         sql_params = (first_name, last_name, zip_code)
     else:
         return None
@@ -37,7 +37,8 @@ def search_name(first_name=None, last_name=None, zip_code=None):
             curDB.execute(sql, sql_params)
             ds = curDB.fetchall()
             if ds:
-                search_results.append(ds[0])
+                for row in range(len(ds)):
+                    search_results.append(ds[row])
                 
     return search_results
 
@@ -94,3 +95,67 @@ def insert_note(cust_id, in_db, note):
                                 ?
                             )""", (cust_id, note, user, cust_id))
         db.commit()
+        
+def get_cust_notes(cust_id, in_db):
+    cur = connect_db(in_db)
+    lstNotes = []
+    with closing(cur) as db:
+        db.execute("""SELECT 
+                            CONVERT(VARCHAR(12), EntryDate, 101) + ' - '
+                            + 'Cust Note - '
+                            + CAST(Notes AS VARCHAR(300)) + ' \n'note
+                        FROM 
+                            dbo.notes 
+                        WHERE 
+                            numericKey = ?
+                        AND
+                            [Type] = 'C'
+                        ORDER BY 
+                            [Type], EntryDate""", (cust_id))
+        ds = db.fetchall()
+    
+    for row in ds:
+        lstNotes.append(row[0])
+
+    return lstNotes    
+
+def get_cust_ords(cust_id, in_db):
+    cur = connect_db(in_db)
+    lst_ords = []
+    
+    with closing(cur) as db:
+        db.execute("""SELECT orderNumber FROM dbo.orders WHERE customerID = ?""", (cust_id))
+        ds = db.fetchall()
+        
+    for row in ds:
+        lst_ords.append(row[0])
+    
+    return lst_ords
+
+def get_ord_notes(orders, in_db):
+    cur = connect_db(in_db)
+    lstNotes = []
+    
+    for ord in orders:
+        with closing(cur) as db:
+            db.execute("""SELECT 
+                            CONVERT(VARCHAR(12), EntryDate, 101) + ' - '
+                            + 'Ord Note - '
+                            + CAST(Notes AS VARCHAR(300)) + ' \n'note
+                        FROM 
+                            dbo.notes 
+                        WHERE 
+                            numericKey = ?
+                        AND
+                            [Type] = 'O'
+                        AND
+                            notes LIKE '%address%'    
+                        ORDER BY 
+                            EntryDate""", (ord))
+            ds = db.fetchall()
+            
+            for row in ds:
+                lstNotes.append(row[0])
+            
+    return lstNotes
+    
