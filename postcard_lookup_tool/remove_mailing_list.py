@@ -104,6 +104,7 @@ class MailingRemove(QMainWindow, Ui_mwMailingRemove):
         self.setEnabled(False)
         self.spinner.show()
         
+        
     def remove_finished(self):
         self.spinner.hide()
         self.setEnabled(True)
@@ -208,7 +209,7 @@ class RemoveProgress(QWidget):
         #End aligning the .fig on the screen.
         
         #Start the .gif.
-        self.movie.start()             
+        self.movie.start()       
         
 if __name__ == '__main__':
     myappid = 'Remove User From Mailing List'
